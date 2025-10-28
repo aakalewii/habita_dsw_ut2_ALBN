@@ -13,6 +13,9 @@
         <p>Email: {{ $usuario->email }}</p>
 
         <h1> Panel de administración. </h1>
+        <nav>
+            <a href="{{ route('categorias.index') }}">Administración de Categorias</a>
+        </nav>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
