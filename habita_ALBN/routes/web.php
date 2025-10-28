@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\AdministracionController;
+use App\Http\Controllers\MuebleController;
 use Illuminate\Support\Facades\Session;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
