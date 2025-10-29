@@ -15,6 +15,8 @@
         <h1> Panel de administración. </h1>
         <nav>
             <a href="{{ route('categorias.index') }}">Administración de Categorias</a>
+            <a href="{{ route('muebles.index') }}">Administración de Muebles</a>
+
         </nav>
 
         <form method="POST" action="{{ route('logout') }}">

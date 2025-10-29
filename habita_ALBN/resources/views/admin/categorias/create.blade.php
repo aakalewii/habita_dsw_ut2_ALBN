@@ -15,4 +15,3 @@
     <br>
     <a href="{{ url()->previous() }}" class="btn-volver">Volver</a>
 @endsection
-

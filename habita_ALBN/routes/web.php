@@ -22,3 +22,4 @@ Route::get('/ver_sesion', function () {
 });
 
 Route::resource('categorias', CategoriaController::class);
+Route::resource('muebles', MuebleController::class);

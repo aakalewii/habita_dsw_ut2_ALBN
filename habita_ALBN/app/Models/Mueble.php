@@ -7,6 +7,8 @@ use JsonSerializable;
 class Mueble implements JsonSerializable
 {
     private $id;
+
+    private $nombre;
     private $categoria_id = [];
     private $descripcion;
     private $precio;
@@ -17,9 +19,10 @@ class Mueble implements JsonSerializable
     private $destacado;
     private $imagenes = [];
 
-    public function __construct($id, $categoria_id = [], $descripcion, $precio, $stock, $materiales, $dimensiones, $color_principal, $destacado, $imagenes = [])
+    public function __construct($id, $nombre, $categoria_id = [], $descripcion, $precio, $stock, $materiales, $dimensiones, $color_principal, $destacado, $imagenes = [])
     {
         $this->id = $id;
+        $this->nombre = $nombre;
         $this->categoria_id = $categoria_id;
         $this->descripcion = $descripcion;
         $this->precio = $precio;
@@ -35,6 +38,7 @@ class Mueble implements JsonSerializable
     {
         return [
             'id' => $this->id,
+            'nombre'=> $this->nombre,
             'categoria_id' => $this->categoria_id,
             'descripcion' => $this->descripcion,
             'precio' => $this->precio,
@@ -62,6 +66,15 @@ class Mueble implements JsonSerializable
         $this->id = $id;
 
         return $this;
+    }
+
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
     }
 
     public function getCategoria()
