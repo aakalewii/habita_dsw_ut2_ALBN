@@ -1,9 +1,9 @@
 @extends('cabecera')
 
-@section('titulo', 'Categorias')
+@section('titulo', 'Muebles')
 
 @section('contenido')
-    <h1>Categorias</h1>
+    <h1>Muebles</h1>
     <p><a href="{{ route('muebles.create') }}">+ Nuevo Mueble</a></p>
     @if (empty($muebles))
         <p>No hay muebles.</p>
@@ -19,12 +19,12 @@
             <tbody>
                 @foreach ($muebles as $mueble)
                     <tr>
-                        <td>{{ $mueble['nombre'] }}</td>
-                        <td>{{ $mueble['descripcion'] ?? '-' }}</td>
+                        <td>{{ $mueble->getNombre() }}</td>
+                        <td>{{ $mueble->getDescripcion() ?? '-' }}</td>
                         <td>
-                            <a href="{{ route('muebles.show', $mueble['id']) }}">Ver</a> |
-                            <a href="{{ route('muebles.edit', $mueble['id']) }}">Editar</a> |
-                            <form method="POST" action="{{ route('categorias.destroy', $mueble['id']) }}" style="display:inline">
+                            <a href="{{ route('muebles.show', $mueble->getId()) }}">Ver</a> |
+                            <a href="{{ route('muebles.edit', $mueble->getId()) }}">Editar</a> |
+                            <form method="POST" action="{{ route('muebles.destroy', $mueble->getId()) }}" style="display:inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" onclick="return confirm('Eliminar este mueble?')">Eliminar</button>
@@ -36,4 +36,3 @@
         </table>
     @endif
 @endsection
-

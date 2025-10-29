@@ -4,8 +4,8 @@
 
 @section('contenido')
     <h2>Detalle de mueble</h2>
-    <p><strong>Nombre:</strong> {{ $mueble['nombre'] }}</p>
-    <p><strong>Descripcion:</strong> {{ $mueble['precio'] ?? '-' }}</p>
+    <p><strong>Nombre:</strong> {{ $mueble->getNombre() }}</p>
+    <p><strong>Descripcion:</strong> {{ $mueble->getDescripcion() ?? '-' }}</p>
     <br>
-    <a href="{{ route('categorias.index') }}">Volver al listado</a>
+    <a href="{{ route('muebles.index') }}">Volver al listado</a>
 @endsection

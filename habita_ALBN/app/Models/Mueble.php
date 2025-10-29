@@ -1,7 +1,7 @@
 <?php
 
-namespace Habita_ALBN\App\Models;
-use Illuminate\Support\Facades\Session;
+namespace App\Models;
+
 use JsonSerializable;
 
 class Mueble implements JsonSerializable
@@ -19,7 +19,19 @@ class Mueble implements JsonSerializable
     private $destacado;
     private $imagenes = [];
 
-    public function __construct($id, $nombre, $categoria_id = [], $descripcion, $precio, $stock, $materiales, $dimensiones, $color_principal, $destacado, $imagenes = [])
+    public function __construct(
+        $id,
+        $nombre,
+        $categoria_id = [],
+        $descripcion = null,
+        $precio = 0,
+        $stock = 0,
+        $materiales = null,
+        $dimensiones = null,
+        $color_principal = null,
+        $destacado = false,
+        $imagenes = []
+    )
     {
         $this->id = $id;
         $this->nombre = $nombre;
@@ -130,7 +142,7 @@ class Mueble implements JsonSerializable
 
     public function getStock()
     {
-        return $this->id;
+        return $this->stock;
     }
 
     /**

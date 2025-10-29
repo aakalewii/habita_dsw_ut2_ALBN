@@ -5,15 +5,15 @@
 @section('contenido')
     <h2>Editar mueble</h2>
 
-    <form action="{{ route('muebles.update', $mueble['id']) }}" method="POST" class="mt-2">
+    <form action="{{ route('muebles.update', $mueble->getId()) }}" method="POST" class="mt-2">
         @csrf
-        <input type="text" name="nombre" value="{{ $mueble->getNombre() }}">
-        <input type="number" step="0.1" name="precio" value="{{ $mueble->getPrecio() }}">
-        <input type="number" step="0.1" name="stock" value="{{ $mueble->getStock() }}">
-        <input type="text" name="materiales" value="{{ $mueble->getMateriales() }}">
-        <input type="text" name="dimensiones" value="{{ $mueble->getDimensiones() }}">
-        <input type="text" name="color_principal" value="{{ $mueble->getColorPrincipal() }}">
-        <input type="text" name="destacado" value="{{ $mueble->getDestacado() }}">
+        <input type="text" name="nombre" value="{{ $mueble->getNombre() }}" required>
+        <input type="number" step="0.1" name="precio" value="{{ $mueble->getPrecio() }}" required>
+        <input type="number" step="0.1" name="stock" value="{{ $mueble->getStock() }}" required>
+        <input type="text" name="materiales" value="{{ $mueble->getMateriales() }}" required>
+        <input type="text" name="dimensiones" value="{{ $mueble->getDimensiones() }}" required>
+        <input type="text" name="color_principal" value="{{ $mueble->getColorPrincipal() }}" required>
+        <input type="text" name="destacado" value="{{ $mueble->getDestacado() }}" required>
 
 
 
