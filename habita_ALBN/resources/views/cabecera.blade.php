@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('titulo', 'Tienda de muebles')</title>
+    @stack('styles')
 </head>
 
 <body>
@@ -14,6 +15,7 @@
     <header>
         <nav>
             <a href="{{ route('dashboard') }}">Panel de Administración</a>
+            <a href="{{ route('preferencias.edit') }}">Preferencias</a>
         </nav>
         @if ($usuario)
             <div>
@@ -31,7 +33,8 @@
     <main>
         @yield('contenido')
     </main>
+
+    @stack('scripts')
 </body>
 
 </html>
-
