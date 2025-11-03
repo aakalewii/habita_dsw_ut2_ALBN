@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Mueble;
 
 class MuebleController extends Controller
@@ -49,12 +51,14 @@ class MuebleController extends Controller
     public function create()
     {
         $this->requireLogin();
-        return view('admin.muebles.create');
+        $categorias = Session::get('categorias', []);
+        return view('admin.muebles.create', compact('categorias'));
     }
 
     public function store(Request $request)
     {
         $this->requireLogin();
+
         $data = $request->validate([
             'nombre' => 'required|string',
             'descripcion' => 'nullable|string',
@@ -63,15 +67,19 @@ class MuebleController extends Controller
             'materiales' => 'nullable|string',
             'dimensiones' => 'nullable|string',
             'color_principal' => 'nullable|string',
+            'categoria_id' => 'nullable|array',
+            'categoria_id.*' => 'string',
         ]);
         $data['destacado'] = $request->boolean('destacado');
 
         $id = uniqid();
+        $categoriaIds = (array) $request->input('categoria_id', []);
+
         $muebles = Session::get('muebles', []);
         $muebles[$id] = new Mueble(
             $id,
             $data['nombre'],
-            [],
+            $categoriaIds,
             $data['descripcion'] ?? null,
             $data['precio'],
             $data['stock'],
@@ -82,6 +90,21 @@ class MuebleController extends Controller
             []
         );
         Session::put('muebles', $muebles);
+
+        $minutes = 60 * 24 * 30;
+        $payload = [
+            'id' => $id,
+            'nombre' => $data['nombre'],
+            'categoria_id' => $categoriaIds,
+            'descripcion' => $data['descripcion'] ?? null,
+            'precio' => $data['precio'],
+            'stock' => $data['stock'],
+            'materiales' => $data['materiales'] ?? null,
+            'dimensiones' => $data['dimensiones'] ?? null,
+            'color_principal' => $data['color_principal'] ?? null,
+            'destacado' => $data['destacado'] ?? false,
+        ];
+        Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
 
         return redirect()->route('muebles.index');
     }
@@ -101,12 +124,14 @@ class MuebleController extends Controller
         $muebles = Session::get('muebles', []);
         if (!isset($muebles[$id])) abort(404);
         $mueble = $this->toMueble($muebles[$id]);
-        return view('admin.muebles.edit', compact('mueble'));
+        $categorias = Session::get('categorias', []);
+        return view('admin.muebles.edit', compact('mueble', 'categorias'));
     }
 
     public function update(Request $request, string $id)
     {
         $this->requireLogin();
+
         $muebles = Session::get('muebles', []);
         if (!isset($muebles[$id])) abort(404);
 
@@ -118,13 +143,19 @@ class MuebleController extends Controller
             'materiales' => 'nullable|string',
             'dimensiones' => 'nullable|string',
             'color_principal' => 'nullable|string',
+            'categoria_id' => 'nullable|array',
+            'categoria_id.*' => 'string',
         ]);
         $data['destacado'] = $request->boolean('destacado');
+
+        $categoriaIds = (array) $request->input('categoria_id', []);
+        $prev = $this->toMueble($muebles[$id]);
+        $imagenes = $prev->getImagenes() ?? [];
 
         $muebles[$id] = new Mueble(
             $id,
             $data['nombre'],
-            [],
+            $categoriaIds,
             $data['descripcion'] ?? null,
             $data['precio'],
             $data['stock'],
@@ -132,9 +163,24 @@ class MuebleController extends Controller
             $data['dimensiones'] ?? null,
             $data['color_principal'] ?? null,
             $data['destacado'] ?? false,
-            []
+            $imagenes
         );
         Session::put('muebles', $muebles);
+
+        $minutes = 60 * 24 * 30;
+        $payload = [
+            'id' => $id,
+            'nombre' => $data['nombre'],
+            'categoria_id' => $categoriaIds,
+            'descripcion' => $data['descripcion'] ?? null,
+            'precio' => $data['precio'],
+            'stock' => $data['stock'],
+            'materiales' => $data['materiales'] ?? null,
+            'dimensiones' => $data['dimensiones'] ?? null,
+            'color_principal' => $data['color_principal'] ?? null,
+            'destacado' => $data['destacado'] ?? false,
+        ];
+        Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
 
         return redirect()->route('muebles.index');
     }
@@ -145,6 +191,94 @@ class MuebleController extends Controller
         $muebles = Session::get('muebles', []);
         unset($muebles[$id]);
         Session::put('muebles', $muebles);
+
+        Cookie::queue(Cookie::forget("mueble_{$id}"));
+
         return redirect()->route('muebles.index');
+    }
+
+    // --- Galería de imágenes (opcional, si usas la vista y rutas) ---
+
+    public function gallery(string $id)
+    {
+        $this->requireLogin();
+
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        $mueble = $this->toMueble($muebles[$id]);
+        return view('admin.muebles.galeria', compact('mueble'));
+    }
+
+    public function galleryUpload(Request $request, string $id)
+    {
+        $this->requireLogin();
+
+        $request->validate([
+            'imagen' => 'required',
+            'imagen.*' => 'image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        $mueble = $this->toMueble($muebles[$id]);
+        $imagenes = $mueble->getImagenes() ?? [];
+
+        if ($request->hasFile('imagen')) {
+            foreach ($request->file('imagen') as $file) {
+                $safeName = uniqid() . '_' . preg_replace('/[^A-Za-z0-9._-]/', '_', $file->getClientOriginalName());
+                $path = Storage::putFileAs('muebles/' . $id, $file, $safeName);
+                $imagenes[] = $path;
+            }
+        }
+
+        $mueble->setImagenes($imagenes);
+        $muebles[$id] = $mueble;
+        Session::put('muebles', $muebles);
+
+        return redirect()->route('mueble.gallery', $id)->with('mensaje', 'Imágenes subidas correctamente');
+    }
+
+    public function imagen(string $id, string $imagen)
+    {
+        $this->requireLogin();
+
+        $imagen = basename($imagen);
+        $path = 'muebles/' . $id . '/' . $imagen;
+
+        if (!Storage::exists($path)) {
+            abort(404);
+        }
+
+        return Storage::response($path);
+    }
+
+    public function galleryDelete(string $id, string $imagen)
+    {
+        $this->requireLogin();
+
+        $imagen = basename($imagen);
+        $path = 'muebles/' . $id . '/' . $imagen;
+
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        $mueble = $this->toMueble($muebles[$id]);
+        $imagenes = $mueble->getImagenes() ?? [];
+
+        if (Storage::exists($path)) {
+            Storage::delete($path);
+        }
+
+        $imagenes = array_values(array_filter($imagenes, function ($p) use ($imagen) {
+            return basename($p) !== $imagen;
+        }));
+
+        $mueble->setImagenes($imagenes);
+        $muebles[$id] = $mueble;
+        Session::put('muebles', $muebles);
+
+        return redirect()->route('mueble.gallery', $id)->with('mensaje', 'Imagen eliminada');
     }
 }

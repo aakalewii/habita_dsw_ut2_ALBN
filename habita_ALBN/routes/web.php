@@ -6,6 +6,9 @@ use App\Http\Controllers\AdministracionController;
 use App\Http\Controllers\MuebleController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\PreferenciasController;
+use App\Http\Controllers\TiendaController;
+
 
 Route::get('/', fn() => redirect()->route('dashboard'));
 
@@ -23,3 +26,16 @@ Route::get('/ver_sesion', function () {
 
 Route::resource('categorias', CategoriaController::class);
 Route::resource('muebles', MuebleController::class);
+
+Route::get('/muebles/{id}/galeria', [MuebleController::class, 'gallery'])->name('mueble.gallery');
+Route::post('/muebles/{id}/galeria', [MuebleController::class, 'galleryUpload'])->name('mueble.gallery.upload');
+Route::get('/muebles/{id}/imagen/{imagen}', [MuebleController::class, 'imagen'])->name('mueble.imagen');
+Route::delete('/muebles/{id}/galeria/{imagen}', [MuebleController::class, 'galleryDelete'])->name('mueble.gallery.delete');
+
+
+Route::get('/preferencias', [PreferenciasController::class, 'edit'])->name('preferencias.edit');
+Route::post('/preferencias', [PreferenciasController::class, 'update'])->name('preferencias.update');
+
+
+Route::get('/tienda', [TiendaController::class, 'index'])->name('tienda.index');
+Route::get('/tienda/{id}', [TiendaController::class, 'show'])->name('tienda.show');

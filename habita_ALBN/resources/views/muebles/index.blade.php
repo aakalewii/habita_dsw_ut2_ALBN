@@ -1,19 +1,11 @@
-<!doctype html>
-<html lang="es">
+@extends('cabecera')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel de Usuario (Zona de usuario)</title>
-</head>
+@section('titulo', 'Listado de muebles')
 
-<body>
-    @if (Session::has('autorizacion_usuario'))
-        <h1>Bienvenido, {{ $usuario->nombre}} </h1>
-        <p>Email: {{ $usuario->email }}</p>
+@section('contenido')
+    <h1>Muebles disponibles</h1>
 
-        <h1> Cátalogo de Muebles </h1>
-@if (empty($muebles))
+    @if (empty($muebles))
         <p>No hay muebles disponibles.</p>
     @else
         <div class="muebles-lista">
@@ -32,9 +24,4 @@
             @endforeach
         </div>
     @endif
-    @else
-        <p>Debes iniciar sesión.</p>
-    @endif
-</body>
-
-</html>
+@endsection

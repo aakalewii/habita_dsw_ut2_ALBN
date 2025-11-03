@@ -58,7 +58,7 @@ class LoginController extends Controller
 
     public function cerrarSesion()
     {
-        Session::flush();            // eliminar todos los datos de sesión
+        Session::forget(['autorizacion_usuario','usuario']);
         Session::regenerate();       // regenerar ID de sesión por seguridad
 
         return redirect()->route('login')->with('mensaje', 'Sesión cerrada correctamente.');
