@@ -3,64 +3,67 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RolUser;
-use App\Enums\RolUsuario;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\Usuario;
 
 class LoginController extends Controller
 {
     public function mostrar()
     {
-        return view('login');
+        // Mostrar login sin errores inicialmente
+        return view('login', ['mensaje_error' => null]);
     }
 
     public function login(Request $request)
     {
+        // Validación de campos
         $datos = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string', 'min:4'],
+            'email' => 'required|email',
+            'password' => 'required|string|min:4',
+        ], [
+            'email.required' => 'El correo es obligatorio.',
+            'email.email' => 'Ingresa un correo válido.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.min' => 'La contraseña debe tener al menos 4 caracteres.',
         ]);
 
         // Verificar usuario
         $usuario = User::verificarUsuario($datos['email'], $datos['password']);
 
         if (!$usuario) {
-            return back()->withErrors(['errorCredenciales' => 'Credenciales incorrectas.']);
+            // Si no existe, mostramos mensaje de credenciales incorrectas
+            return view('login', ['mensaje_error' => 'Credenciales incorrectas.']);
         }
 
+        // Login correcto → guardar datos en sesión
         $datosSesion = [
             'email' => $usuario->email,
-            'nombre'  => $usuario->nombre,
+            'nombre' => $usuario->nombre,
             'fecha_ingreso' => now()->toString(),
         ];
 
-        // Guardar usuario en sesión
         Session::put('usuario', json_encode($datosSesion));
         Session::put('autorizacion_usuario', true);
         Session::regenerate();
 
-        // Si el usuario marcó "Recordarme"
+        // "Recordarme"
         if ($request->has('recuerdame')) {
-            // Aumentar manualmente la duración de la cookie de sesión
             config(['session.lifetime' => 43200]); // 30 días
-            // Evitar que la sesión se elimine al cerrar el navegador
             config(['expire_on_close' => true]);
         }
 
-        if ($usuario->rol === RolUser::ADMIN) {
-            return redirect()->route('dashboard');
-        } else {
-            return redirect()->route('principal');
-        }
+        // Redirigir según rol
+        return $usuario->rol === RolUser::ADMIN
+            ? redirect()->route('dashboard')
+            : redirect()->route('principal');
     }
 
     public function cerrarSesion()
     {
         Session::forget(['autorizacion_usuario','usuario']);
-        Session::regenerate();       // regenerar ID de sesión por seguridad
+        Session::regenerate();
 
-        return redirect()->route('login')->with('mensaje', 'Sesión cerrada correctamente.');
+        return redirect()->route('login');
     }
 }

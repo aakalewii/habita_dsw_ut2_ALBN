@@ -41,6 +41,9 @@
             </div>
             <button type="submit">Entrar</button>
         </form>
+        @if($mensaje_error)
+            <p style="color:red;">{{ $mensaje_error }}</p>
+        @endif
     </div>
 </body>
 
