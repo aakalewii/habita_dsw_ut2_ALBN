@@ -46,13 +46,12 @@
         </table>
 
         {{-- Totales (Requerimiento 4.b) --}}
-        {{-- Usamos el sistema de columnas para alinear a la derecha --}}
         <div class="row justify-content-end">
             <div class="col-md-4">
                 <div class="totales-carrito">
                     <h4>Subtotal: {{ number_format($total / 1.16, 2) }} €</h4>
                     <h4>Impuestos (16% simulado): {{ number_format($total - ($total / 1.16), 2) }} €</h4>
-                    <h4>Total: {{ number_format($total, 2) }} €</h4>
+                    <h4 class="mt-3">Total: {{ number_format($total, 2) }} €</h4>
                 </div>
             </div>
         </div>
@@ -66,5 +65,5 @@
             </form>
             <a href="{{ route('principal') }}" class="btn btn-secondary">Seguir comprando</a>
         </div>
-    @endif {{-- Cierre del @if (empty($carrito)) --}}
-@endsection {{-- Cierre final del @section('contenido') --}}
+    @endif
+@endsection

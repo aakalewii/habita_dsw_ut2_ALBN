@@ -8,22 +8,19 @@ use Illuminate\Support\Facades\Session;
 class CarritoController extends Controller
 {
     /**
-     * Genera la clave del carrito única asociada al ID de la sesión actual.
-     * Esto asegura que el carrito persista por sesión.
+     * Genera la clave del carrito única asociada al ID de la sesión actual (Requerimiento 4.c).
      */
     private function getCarritoKey(): string
     {
-        // Usa el ID de la sesión actual para asociar el carrito
         return 'carrito_' . Session::getId();
     }
     
     /**
-     * Función auxiliar para obtener datos de un mueble (Mock Data).
-     * Requerido porque no se usa BD
+     * Función auxiliar para obtener datos de un mueble (Mock Data) para stock y precio.
      */
     private function getMuebleById(string $id): ?array
     {
-        // Mock data con stock para validación
+        // Mock data con stock para validación (Requerimiento 4.d)
         $mueblesMock = [
             'MESA1' => [
                 'id' => 'MESA1', 
@@ -43,7 +40,7 @@ class CarritoController extends Controller
                 'id' => 'SILLA3', 
                 'nombre' => 'Silla Eames Clásica', 
                 'precio' => 75.00, 
-                'stock' => 0, // Stock agotado para probar validación
+                'stock' => 0,
                 'categoria_id' => 'CAT3'
             ],
         ];
@@ -53,7 +50,7 @@ class CarritoController extends Controller
 
 
     /**
-     * Mostramos el resumen del carrito con subtotales, impuestos y total.
+     * Muestra el resumen del carrito con subtotales, impuestos y total (Requerimiento 4.b).
      */
     public function show()
     {
@@ -64,11 +61,12 @@ class CarritoController extends Controller
         $impuestos = $subtotal * 0.16; // 16% de impuestos simulados
         $total = $subtotal + $impuestos;
 
+        // NOTA: La vista que carga es 'carrito.show'
         return view('carrito.show', compact('carrito', 'subtotal', 'impuestos', 'total'));
     }
 
     /**
-     * Añade un mueble al carrito o actualiza su cantidad.
+     * Añade un mueble al carrito o actualiza su cantidad (Requerimiento 4.a).
      */
     public function add(Request $request, string $muebleId)
     {
@@ -84,7 +82,7 @@ class CarritoController extends Controller
         $cantidadActual = $carrito[$muebleId]['cantidad'] ?? 0;
         $nuevaCantidad = $cantidadActual + $cantidadAAnadir;
 
-        // Validación de stock
+        // Validación de stock (Requerimiento 4.d)
         if ($stockDisponible === 0) {
             return back()->with('error', 'Producto agotado. No se puede añadir al carrito.');
         }
@@ -103,17 +101,16 @@ class CarritoController extends Controller
                 'nombre' => $mueble['nombre'],
                 'precio' => $mueble['precio'],
                 'cantidad' => $cantidadAAnadir,
-                'stock_disponible' => $stockDisponible, // Guardamos stock para validaciones
+                'stock_disponible' => $stockDisponible, 
             ];
         }
 
         Session::put($this->getCarritoKey(), $carrito);
-        // Usar mensaje flash para el mensaje de éxito
         return redirect()->route('carrito.show')->with('success', $mueble['nombre'] . ' añadido al carrito.');
     }
 
     /**
-     * Actualizamos la cantidad de un mueble en el carrito.
+     * Actualizamos la cantidad de un mueble en el carrito (Requerimiento 4.a).
      */
     public function update(Request $request, string $muebleId)
     {
@@ -124,7 +121,7 @@ class CarritoController extends Controller
         if (isset($carrito[$muebleId])) {
             $stockDisponible = $carrito[$muebleId]['stock_disponible'];
 
-            // Validación de stock al actualizar
+            // Validación de stock al actualizar (Requerimiento 4.d)
             if ($cantidad > $stockDisponible) {
                 return back()->with('error', 'No hay suficiente stock. Máximo permitido: ' . $stockDisponible);
             }
@@ -138,7 +135,7 @@ class CarritoController extends Controller
     }
 
     /**
-     * Elimina un ítem del carrito.
+     * Elimina un ítem del carrito (Requerimiento 4.a).
      */
     public function remove(string $muebleId)
     {
@@ -155,7 +152,7 @@ class CarritoController extends Controller
     }
 
     /**
-     * Vacía completamente el carrito.
+     * Vacía completamente el carrito (Requerimiento 4.a).
      */
     public function clear()
     {

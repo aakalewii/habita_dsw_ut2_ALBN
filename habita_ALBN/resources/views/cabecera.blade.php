@@ -6,11 +6,18 @@
     <title>Tienda de Muebles</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <style>
-        /* Ajuste para que los botones de carrito no ocupen todo el ancho en el catálogo */
+        /* Estilos básicos para la visualización */
         .card-body form {
             display: flex;
             flex-direction: column;
             align-items: center;
+        }
+        .totales-carrito {
+            text-align: right;
+            margin-top: 20px;
+        }
+        .totales-carrito h4 {
+            font-weight: bold;
         }
     </style>
 </head>
@@ -21,19 +28,15 @@
         <div class="container-fluid">
             <a href="{{ route('principal') }}" class="navbar-brand">🏠 Tienda de Muebles</a>
             
-            {{-- Elementos de la derecha: Usaremos ml-auto para empujar al final --}}
             <div class="ms-auto d-flex align-items-center gap-3">
-                
-                {{-- Esto simula el nombre de usuario/admin si existiera --}}
                 <span class="navbar-text text-white-50">
-                    {{-- Si tuvieras la variable $usuario disponible, iría aquí --}}
                     Usuario Activo 
                 </span>
                 
                 <a href="{{ route('carrito.show') }}" class="btn btn-outline-light">Ver Carrito</a>
                 
-                {{-- Simulación del botón Cerrar Sesión --}}
-                <form action="#" method="POST" class="d-flex"> 
+                {{-- Formulario para Cerrar Sesión --}}
+                <form action="{{ route('logout') }}" method="POST" class="d-flex"> 
                     @csrf
                     <button class="btn btn-outline-danger" type="submit">Cerrar Sesión</button>
                 </form>

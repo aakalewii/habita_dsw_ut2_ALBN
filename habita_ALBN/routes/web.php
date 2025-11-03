@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\CarritoController;
 
+
 Route::get(uri: '/', action: fn() => redirect()->route('dashboard'));
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');

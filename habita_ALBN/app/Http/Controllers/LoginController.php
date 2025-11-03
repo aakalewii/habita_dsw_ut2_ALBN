@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RolUser;
-use App\Enums\RolUsuario;
+// use App\Enums\RolUsuario; // Eliminado si no se usa
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use App\Models\Usuario;
+// use App\Models\Usuario; // Eliminado si no se usa
 
 class LoginController extends Controller
 {
@@ -24,6 +24,7 @@ class LoginController extends Controller
         ]);
 
         // Verificar usuario
+        // Asumiendo que User::verificarUsuario ha sido adaptado para devolver el objeto User
         $usuario = User::verificarUsuario($datos['email'], $datos['password']);
 
         if (!$usuario) {
@@ -33,7 +34,8 @@ class LoginController extends Controller
         $datosSesion = [
             'email' => $usuario->email,
             'nombre'  => $usuario->nombre,
-            'fecha_ingreso' => now()->toString(),
+            'rol' => $usuario->rol, // AÑADIDO: NECESARIO PARA LA REDIRECCIÓN Y PROTECCIÓN
+            'fecha_ingreso' => now()->toDateTimeString(), // Formato corregido
         ];
 
         // Guardar usuario en sesión
@@ -49,7 +51,9 @@ class LoginController extends Controller
             config(['expire_on_close' => true]);
         }
 
-        if ($usuario->rol === RolUser::ADMIN) {
+        // Redirección basada en Rol
+        // Asumiendo que RolUser::ADMIN está definido como una constante/enum string que se compara con $usuario->rol
+        if ($usuario->rol === RolUser::ADMIN) { 
             return redirect()->route('dashboard');
         } else {
             return redirect()->route('principal');
