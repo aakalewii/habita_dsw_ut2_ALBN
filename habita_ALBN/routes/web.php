@@ -37,5 +37,5 @@ Route::get('/preferencias', [PreferenciasController::class, 'edit'])->name('pref
 Route::post('/preferencias', [PreferenciasController::class, 'update'])->name('preferencias.update');
 
 
-Route::get('/tienda', [TiendaController::class, 'index'])->name('tienda.index');
-Route::get('/tienda/{id}', [TiendaController::class, 'show'])->name('tienda.show');
+Route::get('/catalogo-muebles', [TiendaController::class, 'index'])->name('catalogomuebles.index');
+Route::get('/catalogo-muebles/{id}', [TiendaController::class, 'show'])->name('catalogomuebles.show');

@@ -12,26 +12,15 @@
         <h1>Bienvenido, {{ $usuario->nombre}} </h1>
         <p>Email: {{ $usuario->email }}</p>
 
-        <h1> Cátalogo de Muebles </h1>
-@if (empty($muebles))
-        <p>No hay muebles disponibles.</p>
-    @else
-        <div class="muebles-lista">
-            @foreach ($muebles as $mueble)
-                <div class="mueble-card">
-                    <h3>
-                        @if (Route::has('tienda.show'))
-                            <a href="{{ route('tienda.show', $mueble->getId()) }}">{{ $mueble->getNombre() }}</a>
-                        @else
-                            {{ $mueble->getNombre() }}
-                        @endif
-                    </h3>
-                    <p><strong>Precio:</strong> {{ $mueble->getPrecio() }} €</p>
-                    <p><strong>Descripción:</strong> {{ $mueble->getDescripcion() ?? '-' }}</p>
-                </div>
-            @endforeach
-        </div>
-    @endif
+        <nav>
+            <a href="{{ route('catalogomuebles.index') }}">Catálogo de muebles</a>
+            <a href="{{ route('preferencias.edit') }}">Ajustes de Preferencias</a>
+        </nav>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit">Cerrar sesión</button>
+        </form>
     @else
         <p>Debes iniciar sesión.</p>
     @endif
