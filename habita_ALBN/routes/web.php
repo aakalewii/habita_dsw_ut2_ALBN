@@ -20,7 +20,6 @@ Route::get('/dashboard', [AdministracionController::class, 'index'])->name('dash
 Route::get('/principal', [AdministracionController::class, 'principal'])->name('principal');
 
 Route::get('/ver_sesion', function () {
-    // Muestra todo el contenido de la sesión actual
     return Session::all();
 });
 
