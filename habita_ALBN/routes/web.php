@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\PreferenciasController;
 use App\Http\Controllers\TiendaController;
+use App\Http\Controllers\CarritoController;
 
 
 Route::get('/', fn() => redirect()->route('dashboard'));
@@ -39,3 +40,10 @@ Route::post('/preferencias', [PreferenciasController::class, 'update'])->name('p
 
 Route::get('/catalogo-muebles', [TiendaController::class, 'index'])->name('catalogomuebles.index');
 Route::get('/catalogo-muebles/{id}', [TiendaController::class, 'show'])->name('catalogomuebles.show');
+
+// RUTAS DEL CARRITO (R4)
+Route::get('/carrito', [CarritoController::class, 'show'])->name('carrito.show');
+Route::post('/carrito/insertar/{muebleId}', [CarritoController::class, 'add'])->name('carrito.add');
+Route::post('/carrito/actualizar/{muebleId}', [CarritoController::class, 'update'])->name('carrito.update');
+Route::post('/carrito/eliminar/{muebleId}', [CarritoController::class, 'remove'])->name('carrito.remove');
+Route::post('/carrito/vaciar', [CarritoController::class, 'clear'])->name('carrito.clear');

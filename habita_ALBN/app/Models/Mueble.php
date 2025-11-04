@@ -46,6 +46,15 @@ class Mueble implements JsonSerializable
         $this->imagenes = $imagenes;
     }
 
+    public static function getAllMockData(): array
+    {
+        return [
+            'MESA1' => ['id' => 'MESA1', 'nombre' => 'Mesa de Comedor Lusso', 'precio' => 250.00, 'stock' => 5],
+            'SOFA2' => ['id' => 'SOFA2', 'nombre' => 'Sofá Modular Confort', 'precio' => 850.00, 'stock' => 12],
+            // ... (el resto de tus mocks) ...
+        ];
+    }
+
     public function jsonSerialize(): array
     {
         return [
