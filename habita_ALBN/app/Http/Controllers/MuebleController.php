@@ -249,8 +249,7 @@ class MuebleController extends Controller
 
     public function imagen(string $id, string $imagen)
     {
-        // Este método sirve la imagen de forma segura desde el storage.
-        $this->requireLogin();
+        // Este método sirve la imagen de forma segura desde el storage.     
         $path = "muebles/{$id}/{$imagen}";
 
         if (!Storage::disk('public')->exists($path)) {

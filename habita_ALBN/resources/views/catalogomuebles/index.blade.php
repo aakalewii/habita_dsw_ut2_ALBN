@@ -26,8 +26,13 @@
             @foreach ($mueblesPaginated as $mueble)
                 <div class="col-md-3 mb-4">
                     <div class="mueble-card card h-100 p-3 text-center">
-                        {{-- Simulación de Imagen --}}
-                        <img src="https://via.placeholder.com/200x150/{{ $mueble->getId() }}" class="card-img-top" alt="{{ $mueble->getNombre() }}"> 
+                        @if ($mueble->getImagenes() && !empty($mueble->getImagenes()))
+                            @php $primeraImagen = basename($mueble->getImagenes()[0]); @endphp
+                            <img src="{{ route('mueble.imagen', ['id' => $mueble->getId(), 'imagen' => $primeraImagen]) }}"
+                                 class="card-img-top" alt="{{ $mueble->getNombre() }}" style="height: 150px; object-fit: cover;">
+                        @else
+                            <img src="https://via.placeholder.com/200x150/{{ $mueble->getId() }}" class="card-img-top" alt="{{ $mueble->getNombre() }}">
+                        @endif
                         
                         <div class="card-body text-center d-flex flex-column justify-content-between">
                             <div>
@@ -56,7 +61,8 @@
                                 <button type="submit" class="btn btn-primary" @if($stock == 0) disabled @endif>
                                     Agregar al carrito
                                 </button>
-                                <a href="{{ route('catalogomuebles.show', $mueble->getId()) }}">Ver</a> 
+
+                                <a href="{{ route('catalogomuebles.show', $mueble->getID()) }}">Ver</a>
                             </form>
                         </div>
                     </div>

@@ -48,9 +48,11 @@ class TiendaController extends Controller
             // Construimos el objeto Mueble FINAL para la vista
             $mueblesConStockActualizado[$id] = new Mueble(
                 $mueble['id'] ?? $id, $mueble['nombre'] ?? '', $mueble['categoria_id'] ?? [], $mueble['descripcion'] ?? null,
-                $mueble['precio'] ?? 0, $mueble['stock'] ?? 0, 
+                $mueble['precio'] ?? 0,
+                $mueble['stock'] ?? 0,
                 $mueble['materiales'] ?? null, $mueble['dimensiones'] ?? null, $mueble['color_principal'] ?? null,
-                $mueble['destacado'] ?? false, []
+                $mueble['destacado'] ?? false,
+                $mueble['imagenes'] ?? []
             );
         }
 
