@@ -14,7 +14,7 @@
     @endphp
     <header>
         <nav>
-            <a href="{{ route('catalogomuebles.index') }}">Inicio</a>
+            <a href="{{ route('principal') }}">Inicio</a>
             <a href="{{ route('preferencias.edit') }}">Preferencias</a>
         </nav>
         @if ($usuario)

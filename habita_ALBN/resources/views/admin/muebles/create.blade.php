@@ -25,7 +25,7 @@
         <input type="checkbox" name="destacado" value="1">
         Destacado
         </label>
-        <button class="btn-guardar" type="submit">Guardar receta</button>
+        <button class="btn-guardar" type="submit">Guardar mueble</button>
     </form>
     <br>
     <a href="{{ url()->previous() }}" class="btn-volver">
