@@ -33,6 +33,7 @@ class LoginController extends Controller
         $datosSesion = [
             'email' => $usuario->email,
             'nombre'  => $usuario->nombre,
+            'rol' => $usuario->rol->value,
             'fecha_ingreso' => now()->toString(),
         ];
 

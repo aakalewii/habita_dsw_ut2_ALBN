@@ -1,6 +1,4 @@
-@extends('cabecera')
-
-@section('content')
+<a href="{{ url()->previous() }}" class="btn-volver">Volver</a>
 <div class="container mt-4">
     <h2>Preferencias de Usuario</h2>
 
@@ -33,4 +31,3 @@
         <button type="submit" class="btn btn-primary">Guardar Preferencias</button>
     </form>
 </div>
-@endsection
