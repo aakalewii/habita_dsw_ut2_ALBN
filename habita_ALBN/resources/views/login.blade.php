@@ -35,10 +35,6 @@
                 <label>Contraseña</label>
                 <input type="password" name="password" value="" required>
             </div>
-            <div class="checkbox">
-                <input type="checkbox" name="recuerdame" value="1">
-                <label>Recordarme (30 días)</label>
-            </div>
             <button type="submit">Entrar</button>
         </form>
         @if($mensaje_error)

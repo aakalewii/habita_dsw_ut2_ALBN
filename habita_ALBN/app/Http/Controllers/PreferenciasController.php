@@ -34,7 +34,11 @@ class PreferenciasController extends Controller
         Cookie::queue('moneda', $request->moneda, $minutes);
         Cookie::queue('paginacion', $request->paginacion, $minutes);
 
-        return redirect()->back()->with('mensaje', 'Preferencias guardadas correctamente');
+        $usuario = Session::has('usuario') ? json_decode(Session::get('usuario')) : null;
+        $rol = $usuario->rol ?? null;
+
+        $destino = ($rol === 'admin') ? 'dashboard' : 'catalogomuebles.index';
+        return redirect()->route($destino)->with('mensaje', 'Preferencias guardadas correctamente');
     }
 }
 

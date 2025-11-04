@@ -1,4 +1,4 @@
-@extends('cabecera')
+@extends('cabecerauser')
 
 @section('titulo', 'Listado de muebles')
 
@@ -20,6 +20,7 @@
                     </h3>
                     <p><strong>Precio:</strong> {{ $mueble->getPrecio() }} €</p>
                     <p><strong>Descripción:</strong> {{ $mueble->getDescripcion() ?? '-' }}</p>
+                    <a href="{{ route('catalogomuebles.show', $mueble->getId()) }}">Ver</a> |
                 </div>
             @endforeach
         </div>

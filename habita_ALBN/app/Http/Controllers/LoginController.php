@@ -39,7 +39,8 @@ class LoginController extends Controller
         // Login correcto → guardar datos en sesión
         $datosSesion = [
             'email' => $usuario->email,
-            'nombre' => $usuario->nombre,
+            'nombre'  => $usuario->nombre,
+            'rol' => $usuario->rol->value,
             'fecha_ingreso' => now()->toString(),
         ];
 
