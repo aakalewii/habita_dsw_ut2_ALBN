@@ -37,10 +37,6 @@ Route::delete('/muebles/{id}/galeria/{imagen}', [MuebleController::class, 'galle
 Route::get('/preferencias', [PreferenciasController::class, 'edit'])->name('preferencias.edit');
 Route::post('/preferencias', [PreferenciasController::class, 'update'])->name('preferencias.update');
 
-
-Route::get('/catalogo-muebles', [TiendaController::class, 'index'])->name('catalogomuebles.index');
-Route::get('/catalogo-muebles/{id}', [TiendaController::class, 'show'])->name('catalogomuebles.show');
-
 // RUTAS DEL CARRITO (R4)
 // ... (código de web.php del compañero) ...
 
