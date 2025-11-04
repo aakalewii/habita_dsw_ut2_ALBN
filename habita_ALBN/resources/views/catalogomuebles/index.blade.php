@@ -56,6 +56,7 @@
                                 <button type="submit" class="btn btn-primary" @if($stock == 0) disabled @endif>
                                     Agregar al carrito
                                 </button>
+                                <a href="{{ route('catalogomuebles.show', $mueble->getId()) }}">Ver</a> 
                             </form>
                         </div>
                     </div>

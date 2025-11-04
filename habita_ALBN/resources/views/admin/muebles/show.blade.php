@@ -10,7 +10,7 @@
     <p><strong>Materiales:</strong> {{ $mueble->getMateriales() }}</p>
     <p><strong>Dimensiones:</strong> {{ $mueble->getDimensiones() }}</p>
     <p><strong>Color Principal:</strong> {{ $mueble->getColorPrincipal() }}</p>
-    <p><strong>Destacado:</strong> {{ $mueble->getDestacado() }}</p>
+    <p><strong>Destacado:</strong> {{ $mueble->getDestacado()  ? 'Sí' : 'No' }}</p>
     <br>
     <a href="{{ route('muebles.index') }}">Volver al listado</a>
 @endsection

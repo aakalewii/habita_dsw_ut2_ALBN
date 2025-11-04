@@ -44,9 +44,7 @@ class Mueble implements JsonSerializable
         // El modelo SOLO devuelve la lista de mocks base.
         return [
             'MESA1' => ['id' => 'MESA1', 'nombre' => 'Mesa de Comedor Lusso', 'precio' => 250.00, 'stock' => 5],
-            'SOFA2' => ['id' => 'SOFA2', 'nombre' => 'Sofá Modular Confort', 'precio' => 850.00, 'stock' => 12],
             'SILLA3' => ['id' => 'SILLA3', 'nombre' => 'Silla Eames Clásica', 'precio' => 75.00, 'stock' => 0],
-            'MUEBLE1' => ['id' => 'MUEBLE1', 'nombre' => 'Silla de Oficina', 'precio' => 85.50, 'stock' => 10, 'categoria_id' => 'CAT1'],
         ];
     }
 // ...
