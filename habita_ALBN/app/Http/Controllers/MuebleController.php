@@ -199,9 +199,99 @@ class MuebleController extends Controller
         return redirect()->route('muebles.index');
     }
 
-    // --- Métodos de galería (se mantienen sin modificar si no son tu responsabilidad) ---
-    public function gallery(string $id) { /* ... */ }
-    public function galleryUpload(Request $request, string $id) { /* ... */ }
-    public function imagen(string $id, string $imagen) { /* ... */ }
-    public function galleryDelete(string $id, string $imagen) { /* ... */ }
+
+
+     public function gallery(string $id)
+    {
+        $this->requireLogin();
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        $mueble = $this->toMueble($muebles[$id]);
+
+        return view('admin.muebles.galeria', compact('mueble'));
+    }
+
+    public function galleryUpload(Request $request, string $id)
+    {
+        $this->requireLogin();
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        // i. Validación de subida múltiple (tipos y tamaño)
+        $request->validate([
+            'imagen' => 'required|array',
+            'imagen.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Máximo 2MB por imagen
+        ]);
+
+        $mueble = $this->toMueble($muebles[$id]);
+        $imagenes = $mueble->getImagenes() ?? [];
+
+        if ($request->hasFile('imagen')) {
+            foreach ($request->file('imagen') as $file) {
+                // Genera un nombre único y guarda el archivo en 'storage/app/public/muebles/{id}'
+                $path = $file->store("muebles/{$id}", 'public');
+                $imagenes[] = $path;
+            }
+        }
+
+        $mueble->setImagenes($imagenes);
+        $muebles[$id] = $mueble;
+        Session::put('muebles', $muebles);
+
+        // Actualizamos la cookie para que el catálogo refleje las nuevas imágenes
+        $minutes = 60 * 24 * 30;
+        $payload = $mueble->jsonSerialize();
+        Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
+
+        return redirect()->route('mueble.gallery', $id)->with('success', 'Imágenes subidas correctamente.');
+    }
+
+    public function imagen(string $id, string $imagen)
+    {
+        // Este método sirve la imagen de forma segura desde el storage.
+        $this->requireLogin();
+        $path = "muebles/{$id}/{$imagen}";
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($path);
+    }
+
+    public function galleryDelete(string $id, string $imagen)
+    {
+        $this->requireLogin();
+        $muebles = Session::get('muebles', []);
+        if (!isset($muebles[$id])) abort(404);
+
+        $mueble = $this->toMueble($muebles[$id]);
+        $imagenes = $mueble->getImagenes() ?? [];
+
+        $pathCompleto = "muebles/{$id}/{$imagen}";
+        $imagenesFiltradas = [];
+
+        // iii. Borrado de imágenes
+        foreach ($imagenes as $imgPath) {
+            // Comparamos el nombre base del archivo para encontrar la imagen a borrar
+            if (basename($imgPath) === $imagen) {
+                // Borramos el archivo físico del disco
+                Storage::disk('public')->delete($imgPath);
+            } else {
+                $imagenesFiltradas[] = $imgPath;
+            }
+        }
+
+        $mueble->setImagenes($imagenesFiltradas);
+        $muebles[$id] = $mueble;
+        Session::put('muebles', $muebles);
+
+        // Actualizamos la cookie
+        $minutes = 60 * 24 * 30;
+        $payload = $mueble->jsonSerialize();
+        Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
+
+        return redirect()->route('mueble.gallery', $id)->with('success', 'Imagen eliminada correctamente.');
+    }
 }
