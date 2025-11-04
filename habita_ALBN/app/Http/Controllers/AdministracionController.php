@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 class AdministracionController extends Controller
 {
     public function index()
     {
-        // Esta función protege el DASHBOARD y DEBE mantener la protección.
+        // Esta protección sigue activa para /dashboard (R5)
         if (!Session::has('autorizacion_usuario') || !Session::get('autorizacion_usuario')) {
             return redirect()->route('login')->withErrors(['error' => 'Debes iniciar sesión.']);
         }
@@ -18,12 +19,13 @@ class AdministracionController extends Controller
         return view('dashboard', compact('usuario'));
     }
 
-    public function principal()
+    /**
+     * Catálogo Principal (Público)
+     * Redirige al controlador de tienda/catálogo para mostrar los productos.
+     */
+    public function principal(Request $request) 
     {
-
-        // Si la sesión existe, la pasamos a la vista; si no, es null.
-        $usuario = Session::has('usuario') ? json_decode(Session::get('usuario')) : null;
-
-        return view('principal', compact('usuario'));
+        // CORRECCIÓN: Redirigir al controlador real del catálogo público (TiendaController)
+        return redirect()->route('catalogomuebles.index');
     }
 }

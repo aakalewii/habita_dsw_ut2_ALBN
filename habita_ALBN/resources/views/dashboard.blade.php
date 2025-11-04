@@ -1,26 +1,32 @@
-<!doctype html>
-<html lang="es">
+@extends('cabecera')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel de Administración</title>
-</head>
+@section('titulo', 'Panel de Administración')
 
-<body>
+@section('contenido')
+    <h2 class="mb-4">Panel de Administración</h2>
+    
     @if (Session::has('autorizacion_usuario'))
-        <h1>Bienvenido, {{ $usuario->nombre }} </h1>
-        <p>Email: {{ $usuario->email }}</p>
+        @php
+             // Asegura que se pasa el usuario para mostrar el mensaje
+             $usuario = json_decode(Session::get('usuario')); 
+        @endphp
+        
+        <h1>Bienvenido, {{ $usuario->nombre ?? 'Administrador' }} </h1>
+        <p>Email: {{ $usuario->email ?? 'N/A' }}</p>
 
-        <h1> Panel de administración. </h1>
+        <hr>
+        
+        <h3 class="mt-4">Gestión de Contenido</h3>
+        <nav class="d-flex flex-column gap-2">
+            <a href="{{ route('categorias.index') }}">Administración de Categorias</a>
+            <a href="{{ route('muebles.index') }}">Administración de Muebles</a>
+        </nav>
 
-        <form method="POST" action="{{ route('logout') }}">
+        <form method="POST" action="{{ route('logout') }}" class="mt-4">
             @csrf
-            <button type="submit">Cerrar sesión</button>
+            <button type="submit" class="btn btn-danger">Cerrar sesión</button>
         </form>
     @else
-        <p>Debes iniciar sesión.</p>
+        <p class="alert alert-warning">Debes iniciar sesión.</p>
     @endif
-</body>
-
-</html>
+@endsection

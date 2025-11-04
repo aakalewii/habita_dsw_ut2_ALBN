@@ -3,11 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Enums\RolUser;
-// use App\Enums\RolUsuario; // Eliminado si no se usa
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-// use App\Models\Usuario; // Eliminado si no se usa
 
 class LoginController extends Controller
 {
@@ -24,7 +22,6 @@ class LoginController extends Controller
         ]);
 
         // Verificar usuario
-        // Asumiendo que User::verificarUsuario ha sido adaptado para devolver el objeto User
         $usuario = User::verificarUsuario($datos['email'], $datos['password']);
 
         if (!$usuario) {
@@ -34,26 +31,23 @@ class LoginController extends Controller
         $datosSesion = [
             'email' => $usuario->email,
             'nombre'  => $usuario->nombre,
-            'rol' => $usuario->rol, // AÑADIDO: NECESARIO PARA LA REDIRECCIÓN Y PROTECCIÓN
-            'fecha_ingreso' => now()->toDateTimeString(), // Formato corregido
+            'rol' => $usuario->rol, // ROL AÑADIDO
+            'fecha_ingreso' => now()->toDateTimeString(),
         ];
 
-        // Guardar usuario en sesión
+        // Guardar usuario en sesión (Requerimiento 2.c)
         Session::put('usuario', json_encode($datosSesion));
         Session::put('autorizacion_usuario', true);
         Session::regenerate();
 
         // Si el usuario marcó "Recordarme"
         if ($request->has('recuerdame')) {
-            // Aumentar manualmente la duración de la cookie de sesión
-            config(['session.lifetime' => 43200]); // 30 días
-            // Evitar que la sesión se elimine al cerrar el navegador
+            config(['session.lifetime' => 43200]); 
             config(['expire_on_close' => true]);
         }
 
         // Redirección basada en Rol
-        // Asumiendo que RolUser::ADMIN está definido como una constante/enum string que se compara con $usuario->rol
-        if ($usuario->rol === RolUser::ADMIN) { 
+        if ($usuario->rol === \App\Enums\RolUser::ADMIN) { 
             return redirect()->route('dashboard');
         } else {
             return redirect()->route('principal');
@@ -62,8 +56,11 @@ class LoginController extends Controller
 
     public function cerrarSesion()
     {
-        Session::flush();            // eliminar todos los datos de sesión
-        Session::regenerate();       // regenerar ID de sesión por seguridad
+        // CORRECCIÓN CRÍTICA PARA R4.c: Solo borramos las credenciales, NO el carrito.
+        Session::forget('usuario');
+        Session::forget('autorizacion_usuario');
+        
+        Session::regenerate(); 
 
         return redirect()->route('login')->with('mensaje', 'Sesión cerrada correctamente.');
     }

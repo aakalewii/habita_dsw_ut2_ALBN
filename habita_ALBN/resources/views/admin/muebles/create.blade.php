@@ -1,40 +1,41 @@
-@section('titulo', 'Nueva receta')
+@extends('cabecera')
+
+@section('titulo', 'Nuevo mueble')
 
 @section('contenido')
-    <h2>Nuevo Producto</h2>
+    <h2>Nueva mueble</h2>
 
-    <form method="POST" action="{{ route('receta.store') }}">
+    <form method="POST" action="{{ route('muebles.store') }}">
         @csrf
-        <input type="text" name="titulo" placeholder="Título" required>
-        <input type="number" name="dificultad" min="1" max="5" placeholder="Dificultad (1-5)" required>
+        <input type="text" name="nombre" placeholder="nombre" required>
         <input type="number" step="0.1" name="precio" placeholder="Precio (€)" required>
+        <input type="number" name="stock" placeholder="stock" required>
+        <input type="text" name="materiales" placeholder="materiales" required>
+        <input type="text" name="dimensiones" placeholder="dimensiones" required>
+        <input type="text" name="color_principal" placeholder="color principal" required>
+        <input type="text" name="destacado" placeholder="destacado" required>
 
-        <h3>Categoria</h3>
-        <div id="ingredientes">
-            <div>
-                <input type="text" name="categoria_id[0][nombre]" placeholder="Nombre" required>
-                <input type="text" name="categoria_id[0][descripcion]" placeholder="Descripción">
-            </div>
+
+        {{-- Sección de Categorías (CORRECCIÓN) --}}
+        <h3>Categorías</h3>
+        <p>Selecciona una o más categorías:</p>
+        
+        <div id="categorias">
+            {{-- NOTA: Este bucle debe iterar sobre las categorías pasadas por el MuebleController::create --}}
+            @php $categorias = session('categorias', []); @endphp 
+            @foreach ($categorias as $id => $cat)
+                <div>
+                    <input type="checkbox" name="categoria_id[]" value="{{ $cat['id'] }}" id="cat_{{ $cat['id'] }}">
+                    <label for="cat_{{ $cat['id'] }}">{{ $cat['nombre'] }}</label>
+                </div>
+            @endforeach
         </div>
 
-        <button class="btn-agregar" type="button" onclick="agregarCategoria()">+ Añadir categoria</button>
-        <button class="btn-guardar" type="submit">Guardar receta</button>
+        {{-- Se elimina la función agregarCategoria() --}}
+        <button class="btn-guardar" type="submit">Guardar mueble</button> 
     </form>
     <br>
     <a href="{{ url()->previous() }}" class="btn-volver">
         Volver
     </a>
-    <script>
-        let count = 1;
-        // Función de JavaScript que agrega ingredientes de forma dinámica.
-        function agregarIngrediente() {
-            const div = document.createElement('div');
-            div.innerHTML = `
-            <input type="text" name="categoria_id[${count}][nombre]" placeholder="Nombre" required>
-            <input type="text" name="categoria_id[${count}][descripcion]" placeholder="Descripción">
-        `;
-            document.getElementById('categoria_id').appendChild(div);
-            count++;
-        }
-    </script>
 @endsection

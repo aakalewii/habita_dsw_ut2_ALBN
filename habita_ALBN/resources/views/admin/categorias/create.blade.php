@@ -1,3 +1,5 @@
+@extends('cabecera')
+
 @section('titulo', 'Nueva categoria')
 
 @section('contenido')
@@ -6,12 +8,10 @@
     <form method="POST" action="{{ route('categorias.store') }}">
         @csrf
         <input type="text" name="nombre" placeholder="nombre" required>
-        <input type="text" name="descripcion" placeholder="descripción">
+        <input type="text" name="descripcion" placeholder="descripcion">
 
         <button class="btn-guardar" type="submit">Guardar categoria</button>
     </form>
     <br>
-    <a href="{{ url()->previous() }}" class="btn-volver">
-        Volver
-    </a>
+    <a href="{{ url()->previous() }}" class="btn-volver">Volver</a>
 @endsection
