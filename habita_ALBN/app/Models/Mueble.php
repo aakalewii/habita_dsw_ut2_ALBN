@@ -48,11 +48,28 @@ class Mueble implements JsonSerializable
 
     public static function getAllMockData(): array
     {
-        return [
+        // Obtener la lista base
+        $baseMocks = [
             'MESA1' => ['id' => 'MESA1', 'nombre' => 'Mesa de Comedor Lusso', 'precio' => 250.00, 'stock' => 5],
-            'SOFA2' => ['id' => 'SOFA2', 'nombre' => 'Sofá Modular Confort', 'precio' => 850.00, 'stock' => 12],
-            // ... (el resto de tus mocks) ...
+            // ... (resto de mocks) ...
         ];
+
+        $mueblesActualizados = [];
+
+        foreach ($baseMocks as $id => $mueble) {
+            $cookieData = request()->cookie("mueble_{$id}"); // Leer la cookie individual
+            
+            if ($cookieData) {
+                $arr = json_decode($cookieData, true);
+                // Sobreescribir el stock base con el valor de la cookie persistida
+                if (isset($arr['stock'])) {
+                    $mueble['stock'] = $arr['stock'];
+                }
+            }
+            $mueblesActualizados[$id] = $mueble;
+        }
+
+        return $mueblesActualizados; // Devolver los datos con el stock real/actualizado
     }
 
     public function jsonSerialize(): array
