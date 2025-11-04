@@ -10,7 +10,7 @@ use App\Http\Controllers\PreferenciasController;
 use App\Http\Controllers\TiendaController;
 
 
-Route::get('/', fn() => redirect()->route('dashboard'));
+Route::get('/', fn() => redirect()->route('login'));
 
 Route::get('/login', [LoginController::class, 'mostrar'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
