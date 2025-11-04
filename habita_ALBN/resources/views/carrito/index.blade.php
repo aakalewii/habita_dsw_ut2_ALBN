@@ -1,4 +1,4 @@
-@extends('cabecera')
+@extends('cabecera') {{-- OK: Se extiende el layout --}}
 
 @section('contenido')
     <h2 class="mb-4">Tu carrito</h2>
@@ -8,6 +8,7 @@
         $monedaSimbolo = request()->cookie('preferencia_moneda', '€'); 
     @endphp
 
+    {{-- Mostrar mensajes flash de éxito/error --}}
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
@@ -64,6 +65,7 @@
         <div class="row justify-content-end">
             <div class="col-md-4">
                 <div class="totales-carrito">
+                    {{-- Los totales vienen calculados del CarritoController --}}
                     <h4>Subtotal: {{ number_format($subtotal, 2) }} {{ $monedaSimbolo }}</h4>
                     <h4>Impuestos (16% simulado): {{ number_format($impuestos, 2) }} {{ $monedaSimbolo }}</h4>
                     <h4 class="mt-3">Total: {{ number_format($total, 2) }} {{ $monedaSimbolo }}</h4>
@@ -73,11 +75,12 @@
         
 
         <div class="mt-3 d-flex gap-2 justify-content-end">
+            {{-- Botón Vaciar Carrito (Requerimiento 4.a) --}}
             <form method="POST" action="{{ route('carrito.clear') }}">
                 @csrf
                 <button class="btn btn-warning" type="submit" >Vaciar carrito</button>
             </form>
             <a href="{{ route('principal') }}" class="btn btn-success">Continuar Comprando</a>
         </div>
-    @endif
+    @endif 
 @endsection

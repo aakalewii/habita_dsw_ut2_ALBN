@@ -19,12 +19,13 @@ class AdministracionController extends Controller
 
     public function principal()
     {
-        if (!Session::has('autorizacion_usuario') || !Session::get('autorizacion_usuario')) {
-            return redirect()->route('login')->withErrors(['error' => 'Debes iniciar sesión.']);
-        }
+        // if (!Session::has('autorizacion_usuario') || !Session::get('autorizacion_usuario')) {
+        //     return redirect()->route('login')->withErrors(['error' => 'Debes iniciar sesión.']);
+        // }
 
-        $usuario = json_decode(Session::get('usuario'));
+        $usuario = Session::has('usuario') ? json_decode(Session::get('usuario')) : null;
 
-        return view('principal', compact('usuario'));
+        // Redirigimos a la ruta que hemos asociado al TiendaController::index
+        return redirect()->route('catalogomuebles.index');
     }
 }

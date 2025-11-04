@@ -42,6 +42,9 @@ Route::get('/catalogo-muebles', [TiendaController::class, 'index'])->name('catal
 Route::get('/catalogo-muebles/{id}', [TiendaController::class, 'show'])->name('catalogomuebles.show');
 
 // RUTAS DEL CARRITO (R4)
+// ... (código de web.php del compañero) ...
+
+// RUTAS DEL CARRITO (TU PARTE 4)
 Route::get('/carrito', [CarritoController::class, 'show'])->name('carrito.show');
 Route::post('/carrito/insertar/{muebleId}', [CarritoController::class, 'add'])->name('carrito.add');
 Route::post('/carrito/actualizar/{muebleId}', [CarritoController::class, 'update'])->name('carrito.update');
