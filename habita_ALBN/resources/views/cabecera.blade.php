@@ -4,10 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('titulo', 'Tienda de muebles')</title>
-    {{-- Asegúrate de que este enlace sea el ÚNICO para Bootstrap --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    {{-- Carga dinámica del tema (claro/oscuro) --}}
     @if(request()->cookie('preferencia_tema', 'claro') == 'oscuro')
         <link rel="stylesheet" href="{{ asset('css/tema-oscuro.css') }}">
     @else
@@ -15,7 +13,6 @@
     @endif
 
     <style>
-        /* Estilos CSS aquí, si los tienes */
         .totales-carrito { text-align: right; margin-top: 20px; }
         .totales-carrito h4 { font-weight: bold; }
     </style>

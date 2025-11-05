@@ -13,9 +13,11 @@ class MuebleController extends Controller
 {
     private function toMueble($data): Mueble
     {
+        // Si ya es Mueble lo devuelve
         if ($data instanceof Mueble) {
             return $data;
         }
+        // Convierte a objeto Mueble
         return new Mueble(
             $data['id'] ?? uniqid(),
             $data['nombre'] ?? '',
@@ -57,28 +59,31 @@ class MuebleController extends Controller
     {
         // Si el login falla o el rol es incorrecto, el requireLogin aborta.
         $this->requireLogin();
+        // Lee los muebles de la sesion
         $raw = Session::get('muebles', []);
         $muebles = [];
+        // Normaliza cada entrada a objeto Mueble
         foreach ($raw as $id => $mueble) {
             $muebles[$id] = $this->toMueble($mueble);
         }
+        // Devuelve la lista
         return view('admin.muebles.index', compact('muebles'));
     }
 
     public function create()
     {
         $this->requireLogin();
+        // Carga las categorías
         $categorias = Session::get('categorias', []);
+        // Muestra el formulario de creación
         return view('admin.muebles.create', compact('categorias'));
     }
 
-    /**
-     * Guarda el mueble en Session y en Cookie (para el Catálogo).
-     */
     public function store(Request $request)
     {
         $this->requireLogin();
 
+        // Valida los campos del formulario
         $data = $request->validate([
             'nombre' => 'required|string',
             'descripcion' => 'nullable|string',
@@ -92,9 +97,11 @@ class MuebleController extends Controller
         ]);
         $data['destacado'] = $request->boolean('destacado');
 
+        // Genera un id único
         $id = uniqid();
         $categoriaIds = (array) $request->input('categoria_id', []);
 
+        // Crea el objeto Mueble
         $muebles = Session::get('muebles', []);
         $muebleInstance = new Mueble(
             $id,
@@ -111,11 +118,11 @@ class MuebleController extends Controller
         );
         $muebles[$id] = $muebleInstance;
         Session::put('muebles', $muebles);
-
+        // Lo guarda en sesión y escribe la Cookie
         $minutes = 60 * 24 * 30;
         $payload = $muebleInstance->jsonSerialize();
         Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
-
+        // Devuelve el listado
         return redirect()->route('muebles.index');
     }
 
@@ -123,17 +130,22 @@ class MuebleController extends Controller
     {
         $this->requireLogin();
         $muebles = Session::get('muebles', []);
+        // Localiza por id
+        // si no existe devuelve 404; si existe
         if (!isset($muebles[$id])) abort(404);
         $mueble = $this->toMueble($muebles[$id]);
+        // si existe, lo pasa a la vista de detalle.
         return view('admin.muebles.show', compact('mueble'));
     }
 
     public function edit(string $id)
     {
         $this->requireLogin();
+        // Carga el mueble a editar
         $muebles = Session::get('muebles', []);
         if (!isset($muebles[$id])) abort(404);
         $mueble = $this->toMueble($muebles[$id]);
+        // y las categorías para el formulario
         $categorias = Session::get('categorias', []);
         return view('admin.muebles.edit', compact('mueble', 'categorias'));
     }
@@ -145,6 +157,7 @@ class MuebleController extends Controller
         $muebles = Session::get('muebles', []);
         if (!isset($muebles[$id])) abort(404);
 
+        // valida
         $data = $request->validate([
             'nombre' => 'required|string',
             'descripcion' => 'nullable|string',
@@ -162,6 +175,7 @@ class MuebleController extends Controller
         $prev = $this->toMueble($muebles[$id]);
         $imagenes = $prev->getImagenes() ?? [];
 
+        // reconstruye el objeto manteniendo las imágenes anteriores
         $muebleInstance = new Mueble(
             $id,
             $data['nombre'],
@@ -177,7 +191,7 @@ class MuebleController extends Controller
         );
         $muebles[$id] = $muebleInstance;
         Session::put('muebles', $muebles);
-
+        // actualiza Session y reescribe la Cookie para reflejar los cambios en el catálogo.
         $minutes = 60 * 24 * 30;
         $payload = $muebleInstance->jsonSerialize();
         Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
@@ -191,7 +205,7 @@ class MuebleController extends Controller
         $muebles = Session::get('muebles', []);
         unset($muebles[$id]);
         Session::put('muebles', $muebles);
-
+        // Elimina de Session y borra la cookie mueble_{id}.
         Cookie::queue(Cookie::forget("mueble_{$id}"));
 
         return redirect()->route('muebles.index');

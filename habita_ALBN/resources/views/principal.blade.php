@@ -36,7 +36,7 @@
                             <p class="text-muted">Stock: {{ $mueble['stock'] ?? $mueble->getStock() }}</p>
                         </div>
 
-                        {{-- Formulario para añadir al carrito (R4.a) --}}
+                        {{-- Formulario para añadir al carrito --}}
                         <form method="POST" action="{{ route('carrito.add', ['muebleId' => $mueble['id'] ?? $mueble->getId()]) }}">
                             @csrf
                             @php $stock = $mueble['stock'] ?? $mueble->getStock(); @endphp
@@ -64,5 +64,4 @@
             </div>
         @endforeach
     </div>
-    {{-- (Añadir aquí el código de paginación si se pasa del controlador) --}}
 @endsection

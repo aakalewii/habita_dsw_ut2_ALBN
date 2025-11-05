@@ -11,8 +11,11 @@
         <label for="categoria_id">Categoría</label>
         <select name="categoria_id[]" id="categoria_id">
             @forelse ($categorias as $cat)
+            {{-- Para cada categoría de la lista, se añade una opción al menú desplegable usando
+             su id como valor y su nombre como texto visible. --}}
                 <option value="{{ $cat['id'] }}">{{ $cat['nombre'] }}</option>
             @empty
+            {{-- Si no hay categoria muestra esto --}}
                 <option value="">Sin categoría</option>
             @endforelse
         </select>
