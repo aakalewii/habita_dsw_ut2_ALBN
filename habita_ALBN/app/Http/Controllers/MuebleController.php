@@ -111,7 +111,6 @@ class MuebleController extends Controller
         $muebles[$id] = $muebleInstance;
         Session::put('muebles', $muebles);
 
-        // CRÍTICO: Guardar inmediatamente en Cookie para que TiendaController pueda leer el catálogo.
         $minutes = 60 * 24 * 30;
         $payload = $muebleInstance->jsonSerialize();
         Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
@@ -178,7 +177,6 @@ class MuebleController extends Controller
         $muebles[$id] = $muebleInstance;
         Session::put('muebles', $muebles);
 
-        // CRÍTICO: Actualizar la Cookie después de la edición para que el catálogo lo refleje.
         $minutes = 60 * 24 * 30;
         $payload = $muebleInstance->jsonSerialize();
         Cookie::queue("mueble_{$id}", json_encode($payload, JSON_UNESCAPED_UNICODE), $minutes);
@@ -193,7 +191,6 @@ class MuebleController extends Controller
         unset($muebles[$id]);
         Session::put('muebles', $muebles);
 
-        // CRÍTICO: Eliminar la Cookie para que no persista en el catálogo.
         Cookie::queue(Cookie::forget("mueble_{$id}"));
 
         return redirect()->route('muebles.index');
