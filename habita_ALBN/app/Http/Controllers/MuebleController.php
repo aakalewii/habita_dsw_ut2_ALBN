@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Mueble;
 
@@ -40,11 +41,11 @@ class MuebleController extends Controller
         // 2. Obtener y Decodificar la Sesión de Usuario de forma segura
         $usuarioJson = Session::get('usuario');
         if (!$usuarioJson) {
-             abort(403, 'Acceso denegado. Datos de usuario faltantes.'); 
+            abort(403, 'Acceso denegado. Datos de usuario faltantes.');
         }
         $usuarioData = json_decode($usuarioJson);
 
-        // 3. VERIFICACIÓN DE ROL: CRÍTICO PARA R5/R6
+        // 3. VERIFICACIÓN DE ROL
         // Comparamos contra la cadena de valor simple 'admin'
         if (!isset($usuarioData->rol) || $usuarioData->rol !== 'admin') {
             abort(403, 'Acceso denegado. Se requiere rol de Administrador.');
@@ -246,14 +247,14 @@ class MuebleController extends Controller
 
     public function imagen(string $id, string $imagen)
     {
-        // Este método sirve la imagen de forma segura desde el storage.     
+        // Este método sirve la imagen de forma segura desde el storage.
         $path = "muebles/{$id}/{$imagen}";
 
         if (!Storage::disk('public')->exists($path)) {
             abort(404);
         }
 
-        return Storage::disk('public')->response($path);
+        return Response::file(Storage::disk('public')->path($path));
     }
 
     public function galleryDelete(string $id, string $imagen)

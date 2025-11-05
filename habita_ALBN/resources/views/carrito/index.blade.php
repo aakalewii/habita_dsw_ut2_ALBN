@@ -4,9 +4,7 @@
     <h2 class="mb-4">Tu carrito</h2>
 
     {{-- LECTURA DE LA MONEDA para mostrar el símbolo correcto (R1.b) --}}
-    @php
-        $monedaSimbolo = request()->cookie('preferencia_moneda', '€'); 
-    @endphp
+    @php $monedaSimbolo = $monedaSimbolo ?? '€'; @endphp
 
     {{-- Mostrar mensajes flash de éxito/error --}}
     @if (session('success'))
@@ -35,7 +33,7 @@
                     <tr>
                         <td>{{ $item['nombre'] }}</td>
                         <td>{{ number_format($item['precio'], 2) }} {{ $monedaSimbolo }}</td>
-                        
+
                         {{-- Columna de Cantidad con Formulario de Actualizar (R4.a) --}}
                         <td>
                             <form method="POST" action="{{ route('carrito.update', ['muebleId' => $id]) }}" class="d-flex align-items-center">
@@ -44,11 +42,11 @@
                                 <button class="btn btn-sm btn-info" type="submit">Actualizar</button>
                             </form>
                         </td>
-                        
+
                         <td>{{ $item['stock_disponible'] ?? 'N/A' }}</td>
-                        
+
                         <td>{{ number_format($item['precio'] * $item['cantidad'], 2) }} {{ $monedaSimbolo }}</td>
-                        
+
                         {{-- Botón Eliminar (Requerimiento 4.a) --}}
                         <td>
                             <form method="POST" action="{{ route('carrito.remove', ['muebleId' => $id]) }}">
@@ -72,7 +70,7 @@
                 </div>
             </div>
         </div>
-        
+
 
         <div class="mt-3 d-flex gap-2 justify-content-end">
             {{-- Botón Vaciar Carrito (Requerimiento 4.a) --}}
@@ -82,5 +80,5 @@
             </form>
             <a href="{{ route('principal') }}" class="btn btn-success">Continuar Comprando</a>
         </div>
-    @endif 
+    @endif
 @endsection
