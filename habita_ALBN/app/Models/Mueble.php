@@ -43,8 +43,19 @@ class Mueble implements JsonSerializable
     {
         // El modelo SOLO devuelve la lista de mocks base.
         return [
+            // Mocks base existentes
             'MESA1' => ['id' => 'MESA1', 'nombre' => 'Mesa de Comedor Lusso', 'precio' => 250.00, 'stock' => 5],
             'SILLA3' => ['id' => 'SILLA3', 'nombre' => 'Silla Eames Clásica', 'precio' => 75.00, 'stock' => 0],
+            'SOFA1' => ['id' => 'SOFA1', 'nombre' => 'Sofá Copenhagen 3 plazas', 'precio' => 499.00, 'stock' => 8],
+            'MESA2' => ['id' => 'MESA2', 'nombre' => 'Mesa Auxiliar Nordic', 'precio' => 89.50, 'stock' => 12],
+            'ARMARIO1' => ['id' => 'ARMARIO1', 'nombre' => 'Armario Roble Escandinavo', 'precio' => 699.00, 'stock' => 3],
+            'ESTANTERIA1' => ['id' => 'ESTANTERIA1', 'nombre' => 'Estantería Modular Loft', 'precio' => 199.99, 'stock' => 10],
+            'MESITA1' => ['id' => 'MESITA1', 'nombre' => 'Mesita de Noche Siena', 'precio' => 59.90, 'stock' => 15],
+            'BANCO1' => ['id' => 'BANCO1', 'nombre' => 'Banco de Entrada Oslo', 'precio' => 129.00, 'stock' => 6],
+            'ESCRITORIO1' => ['id' => 'ESCRITORIO1', 'nombre' => 'Escritorio Vintage', 'precio' => 249.00, 'stock' => 4],
+            'COMODA1' => ['id' => 'COMODA1', 'nombre' => 'Cómoda Flora 4 cajones', 'precio' => 179.50, 'stock' => 7],
+            'LAMPARA1' => ['id' => 'LAMPARA1', 'nombre' => 'Lámpara de Pie Arco', 'precio' => 89.00, 'stock' => 20],
+            'SILLON1' => ['id' => 'SILLON1', 'nombre' => 'Sillón Relax Savona', 'precio' => 349.00, 'stock' => 2],
         ];
     }
 // ...
