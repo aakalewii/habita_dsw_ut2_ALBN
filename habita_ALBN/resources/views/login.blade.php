@@ -1,4 +1,4 @@
-@extends('cabecera')
+@extends('cabecera_auth')
 
 @section('titulo', 'Inicio de Sesión')
 
@@ -43,4 +43,3 @@
         </div>
     </div>
 @endsection
-
