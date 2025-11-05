@@ -3,7 +3,7 @@
 @section('titulo', 'Nuevo mueble')
 
 @section('contenido')
-    <h2>Nueva mueble</h2>
+    <h2>Nuevo mueble</h2>
 
     <form method="POST" action="{{ route('muebles.store') }}">
         @csrf

@@ -1,47 +1,46 @@
-<!doctype html>
-<html lang="es">
+@extends('cabecera')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inicio de Sesión</title>
-</head>
+@section('titulo', 'Inicio de Sesión')
 
-<body>
-    <div class="login-container">
-        <h1>Iniciar Sesión</h1>
-        <!-- obtenemos el error a través del identificador, estructura propia de Laravel -->
-        @if ($errors->any())
-            <div class="alert-error">
-                <ul>
+@section('contenido')
+    <div class="row justify-content-center">
+        <div class="col-md-5 col-lg-4">
+
+            @if ($errors->any())
+                <div class="alert alert-danger">
                     @foreach ($errors->all() as $error)
-                        <p> {{ $error }} </p>
+                        <div>{{ $error }}</div>
                     @endforeach
-                </ul>
-            </div>
-        @endif
+                </div>
+            @endif
 
-        @if (session('mensaje'))
-            <div class="mensaje">{{ session('mensaje') }}</div>
-        @endif
+            @if (session('mensaje'))
+                <div class="alert alert-info">{{ session('mensaje') }}</div>
+            @endif
 
-        <form method="POST" action="{{ route('login.post') }}">
-            @csrf
-            <div>
-                <label>Email</label>
-                <input type="email" name="email" value="" required>
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="h4 mb-3 text-center">Iniciar Sesión</h1>
+
+                    <form method="POST" action="{{ route('login.post') }}" class="vstack gap-3">
+                        @csrf
+                        <div>
+                            <label class="form-label" for="email">Email</label>
+                            <input id="email" class="form-control" type="email" name="email" value="{{ old('email') }}" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="password">Contraseña</label>
+                            <input id="password" class="form-control" type="password" name="password" required>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="recuerdame" value="1" id="recuerdame">
+                            <label class="form-check-label" for="recuerdame">Recordarme (30 días)</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                    </form>
+                </div>
             </div>
-            <div>
-                <label>Contraseña</label>
-                <input type="password" name="password" value="" required>
-            </div>
-            <div class="checkbox">
-                <input type="checkbox" name="recuerdame" value="1">
-                <label>Recordarme (30 días)</label>
-            </div>
-            <button type="submit">Entrar</button>
-        </form>
+        </div>
     </div>
-</body>
+@endsection
 
-</html>
